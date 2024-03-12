@@ -1,9 +1,9 @@
 <?php
 require_once("../bootstrap/bootstrap.php");
-$pageTitle = 'HomePage';
+$pageTitle = 'Register';
 top_module($pageTitle);
 ?>
-<form action="Post-validation.php" method="post">
+<form action="Post-validation" method="post">
     <h1>Sign Up</h1>
 
     <label for="username">Username:</label>
@@ -17,7 +17,7 @@ top_module($pageTitle);
 
     <label for="password2">Confirm Password:</label>
     <input type="password" name="password2" id="password2">
-    <button type="submit" value="Register">Register</button>
+    <button type="submit" value="Register" id="submit" name='submit'>Register</button>
 </form>
 <?php
 end_module()
