@@ -1,4 +1,4 @@
 <?php
-require_once("../Public/Helper/helper.php");
+require_once("../public/Helper/helper.php");
 require_once("../Views/header.php");
-require_once("../Views/footer.php");
+require_once("../Views/Footer.php");

@@ -1,23 +1,24 @@
 <?php
-require_once("../bootstrap/bootstrap.php");
+require_once '../bootstrap/bootstrap.php';
 $pageTitle = 'Register';
 top_module($pageTitle);
 ?>
-<form action="Post-validation" method="post">
+<form action="Post-validation" method="post" enctype="multipart/form-data">
     <h1>Sign Up</h1>
 
+    <label for="ID">ID:</label>
+    <input type="text" name="ID" id="ID"><br>
+    <?php if (isset($_SESSION['alerts']['ID_error'])) echo '<p class="error">' . $_SESSION['alerts']['ID_error'] . '</p>';?>
     <label for="username">Username:</label>
-    <input type="text" name="username" id="username">
+    <input type="text" name="username" id="username"><br>
+    <?php if (isset($_SESSION['alerts']['username_error'])) echo '<p class="error">' . $_SESSION['alerts']['username_error'] . '</p>';?>
+    <label for="password">Confirm Password:</label>
+    <input type="password" name="password" id="password"><br>
+    <?php if (isset($_SESSION['alerts']['Password_error'])) echo '<p class="error">' . $_SESSION['alerts']['Password_error'] . '</p>';?>
+    <label for="UserImage">User Image:</label>
+    <input type="file" name="UserImage" id="UserImage"><br>
 
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email">
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password">
-
-    <label for="password2">Confirm Password:</label>
-    <input type="password" name="password2" id="password2">
-    <button type="submit" value="Register" id="submit" name='submit'>Register</button>
+    <button type="submit" value="Register" id="Register" name='Register'>Register</button>
 </form>
 <?php
 end_module()
