@@ -8,13 +8,16 @@ top_module($pageTitle);
 
     <label for="ID">ID:</label>
     <input type="text" name="ID" id="ID"><br>
-    <?php if (isset($_SESSION['alerts']['ID_error'])) echo '<p class="error">' . $_SESSION['alerts']['ID_error'] . '</p>';?>
+    <?php if (isset ($_SESSION['alerts']['ID_error']))
+        echo '<p class="error">' . $_SESSION['alerts']['ID_error'] . '</p>'; ?>
     <label for="username">Username:</label>
     <input type="text" name="username" id="username"><br>
-    <?php if (isset($_SESSION['alerts']['username_error'])) echo '<p class="error">' . $_SESSION['alerts']['username_error'] . '</p>';?>
+    <?php if (isset ($_SESSION['alerts']['username_error']))
+        echo '<p class="error">' . $_SESSION['alerts']['username_error'] . '</p>'; ?>
     <label for="password">Confirm Password:</label>
     <input type="password" name="password" id="password"><br>
-    <?php if (isset($_SESSION['alerts']['Password_error'])) echo '<p class="error">' . $_SESSION['alerts']['Password_error'] . '</p>';?>
+    <?php if (isset ($_SESSION['alerts']['Password_error']))
+        echo '<p class="error">' . $_SESSION['alerts']['Password_error'] . '</p>'; ?>
     <label for="UserImage">User Image:</label>
     <input type="file" name="UserImage" id="UserImage"><br>
 

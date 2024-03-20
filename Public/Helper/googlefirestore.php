@@ -32,17 +32,36 @@ function data_query(string $collection)
     # [END firestore_data_query]
 }
 
-function data_set_from_map(array $data, string $collection): void
+function data_set_from_map(array $data, string $collection): array
 {
     // Create the Cloud Firestore client
     $db = init_FirestoreClient();
     # [START firestore_data_set_from_map]
-    debug_to_console('init_FirestoreClient: ');
+
     /*Array ( [ID] => test1 [username] => test test1 [password] => $2y$10$.7KlaoEIqJJmWMMMJAb/s.rELkADYkORN63z/4yGsuF7GNlZ1jN6q [UserImage] => [Register] => Register )*/
-    $upload = [
-        'password' => $data['password'],
-        'user_name' => $data['username'],
-        'image_path' => $data['UploadPath']
-    ];
-    $db->collection($collection)->document($data['ID'])->set($upload);
+    if ($collection === 'UserAccount') {
+        $db->collection($collection)->document($data['ID'])->set($data);
+    } else {
+        $addedDocRef = $db->collection($collection)->newDocument();
+        $addedDocRef->set($data);
+        debug_to_console($addedDocRef->id());
+    }
+}
+
+function get_random_docid(string $collection): string
+{
+    // Create the Cloud Firestore client
+    $db = init_FirestoreClient();
+    # [START firestore_data_set_from_map]
+
+    $addedDocRef = $db->collection($collection)->add();
+    debug_to_console($addedDocRef->id());
+    return $addedDocRef->id();
+}
+
+function Set_DocID_Data(array $data, string $collection, string $docid): void
+{
+    $db = init_FirestoreClient();
+    $Ref = $db->collection($collection)->document($docid);
+    $Ref->set($data);
 }

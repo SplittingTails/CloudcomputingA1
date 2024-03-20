@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($check !== false) {
                 debug_to_console("File is an image - " . $check["mime"] . ".");
                 $imageFileType = strtolower(pathinfo(basename($_FILES["UserImage"]["name"]), PATHINFO_EXTENSION));
-                $_POST['UploadPath'] = upload_object($_POST["ID"] . '_UserImage.' . $imageFileType, $_FILES['UserImage']["tmp_name"]);
+                $_POST['UserUploadPath'] = upload_object('s3273504userimages', $_POST["ID"] . '_UserImage.' . $imageFileType, $_FILES['UserImage']["tmp_name"]);
             } else {
                 $Alerts['UserImage_Error'] = "File is not an image.";
 
@@ -69,7 +69,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             debug_to_console($_POST);
-            data_set_from_map($_POST, 'UserAccount');
+            $upload = [
+                'password' => $_POST['password'],
+                'user_name' => $_POST['username'],
+                'image_path' => $_POST['UserUploadPath']
+            ];
+            data_set_from_map($upload, 'UserAccount');
             header('Location: /');
             exit();
         }
@@ -110,6 +115,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         }
+    }
+
+    /*** Message form ***/
+    if ($_POST['Message'] == "Message") {
+        if (empty ($_POST['Subject'])) {
+            $Alerts['Subject_error'] = "Subject is required";
+        } else {
+            $_POST['Subject'] = test_input($_POST["Subject"]);
+        }
+        if (empty ($_POST['MessageText'])) {
+            $Alerts['MessageText_error'] = "Message Text is required";
+        } else {
+            $_POST['MessageText'] = test_input($_POST["MessageText"]);
+        }
+        if ($_FILES['MessageImage']['error'] === 0) {
+            
+            $check = getimagesize($_FILES['MessageImage']["tmp_name"]);
+
+            if ($check !== false) {
+                $DocID = get_random_docid('Message');
+                debug_to_console("File is an image - " . $check["mime"] . ".");
+                $imageFileType = strtolower(pathinfo(basename($_FILES["MessageImage"]["name"]), PATHINFO_EXTENSION));
+                $_POST['MessageUploadPath'] = upload_object('s3273504messageimage', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+            } else {
+                $Alerts['UserImage_Error'] = "File is not an image.";
+            }
+        }
+        if (empty ($_POST['ID'])) {
+            $Alerts['ID_error'] = "ID is required";
+        } else {
+            $_POST['ID'] = test_input($_POST["ID"]);
+        }
+        if (count($Alerts) > 0) {
+            $_SESSION['alerts'] = $Alerts;
+            header('Location: /Forum');
+            exit();
+        } else {
+            debug_to_console($_POST);
+            $upload = [
+                'subject' => $_POST['Subject'],
+                'message_Text' => $_POST['MessageText'],
+                'image_path' => $_POST['MessageUploadPath'],
+                'timestamp' => Date('m-d-Y h:i:s a',time()),
+                'user_id' => $_POST['ID']
+
+            ];
+            Set_DocID_Data($upload,'Message',$DocID);
+            header('Location: /Forum');
+        }
+
     }
 }
 

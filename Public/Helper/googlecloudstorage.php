@@ -3,9 +3,8 @@ require '../vendor/autoload.php';
 
 use Google\Cloud\Storage\StorageClient;
 
-function upload_object(string $objectName, string $source): string
+function upload_object(string $bucketName, string $objectName, string $source): string
 {
-    $bucketName = 's3273504userimages';
     $storageURL = 'https://storage.cloud.google.com';
 
     $storage = new StorageClient();
