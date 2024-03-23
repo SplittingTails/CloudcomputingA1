@@ -14,12 +14,14 @@ top_module($pageTitle);
     <input type="text" name="username" id="username"><br>
     <?php if (isset ($_SESSION['alerts']['username_error']))
         echo '<p class="error">' . $_SESSION['alerts']['username_error'] . '</p>'; ?>
-    <label for="password">Confirm Password:</label>
+    <label for="password">Password:</label>
     <input type="password" name="password" id="password"><br>
-    <?php if (isset ($_SESSION['alerts']['Password_error']))
-        echo '<p class="error">' . $_SESSION['alerts']['Password_error'] . '</p>'; ?>
+    <?php if (isset ($_SESSION['alerts']['password_error']))
+        echo '<p class="error">' . $_SESSION['alerts']['password_error'] . '</p>'; ?>
     <label for="UserImage">User Image:</label>
     <input type="file" name="UserImage" id="UserImage"><br>
+    <?php if (isset ($_SESSION['alerts']['UserImage_Error']))
+        echo '<p class="error">' . $_SESSION['alerts']['UserImage_Error'] . '</p>'; ?>
 
     <button type="submit" value="Register" id="Register" name='Register'>Register</button>
 </form>

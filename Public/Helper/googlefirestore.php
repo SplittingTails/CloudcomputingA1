@@ -20,19 +20,34 @@ function init_FirestoreClient()
     return $db;
 
 }
-
-function data_query(string $collection)
+function data_query(string $collection, string $orderby, string $orderbySort, int $limit , string $docid, string $where)
 {
     $db = init_FirestoreClient();
     # [START firestore_data_query]
-    $UserAccounts = $db->collection($collection);
-    $query = $UserAccounts;
-    $documents = $query->documents();
+    $Query = $db->collection($collection);
+    if ($orderby !== '' and $orderbySort !== '') {
+        $UserAccounts = $Query->orderBy($orderby, $orderbySort);
+    }
+    if ($limit !== 0) {
+        $Query = $Query->limit($limit);
+    }
+    if($where !== ''){
+        $list = explode(',', $where);
+        $Query = $Query->where($list[0],$list[1],$list[2]);
+    }
+    if ($docid !== '') {
+        $documents = $Query->document($docid);
+    } else {
+        $documents = $Query->documents();
+    }
+
     return $documents;
     # [END firestore_data_query]
 }
 
-function data_set_from_map(array $data, string $collection): array
+
+
+function data_set_from_map(array $data, string $collection)
 {
     // Create the Cloud Firestore client
     $db = init_FirestoreClient();
@@ -44,18 +59,17 @@ function data_set_from_map(array $data, string $collection): array
     } else {
         $addedDocRef = $db->collection($collection)->newDocument();
         $addedDocRef->set($data);
-        debug_to_console($addedDocRef->id());
+
     }
 }
 
-function get_random_docid(string $collection): string
+function get_random_docid(array $data, string $collection): string
 {
     // Create the Cloud Firestore client
     $db = init_FirestoreClient();
     # [START firestore_data_set_from_map]
 
-    $addedDocRef = $db->collection($collection)->add();
-    debug_to_console($addedDocRef->id());
+    $addedDocRef = $db->collection($collection)->add($data);
     return $addedDocRef->id();
 }
 
@@ -64,4 +78,12 @@ function Set_DocID_Data(array $data, string $collection, string $docid): void
     $db = init_FirestoreClient();
     $Ref = $db->collection($collection)->document($docid);
     $Ref->set($data);
+}
+
+function data_update_document(array $data, string $collection, string $docid): void
+{
+    $db = init_FirestoreClient();
+    # [START firestore_data_set_field]
+    $Ref = $db->collection($collection)->document($docid);
+    $Ref->update($data);
 }

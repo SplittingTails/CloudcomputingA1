@@ -20,6 +20,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/Forum':
         require '../public/Forum.php';
         break;
+    case '/useradmin':
+        require '../public/useradmin.php';
+        break;
     default:
         http_response_code(404);
         exit ('Not Found');
