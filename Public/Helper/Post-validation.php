@@ -280,7 +280,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     /*** UpdateMessage form ***/
 
     if ($_POST['UpdateMessage'] == "UpdateMessage") {
-
+        /*NEED TO FIX BUG WERE IMAGE IS NULL DELETING IMAGE*/
         $uploadimage = false;
         if (empty ($_POST['Subject'])) {
             $Alerts['Subject_error'] = "Subject is required";

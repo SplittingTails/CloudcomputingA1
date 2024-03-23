@@ -7,7 +7,7 @@ if (!isset ($_SESSION)) {
 <!DOCTYPE html>
 <html>
 <header>
-    <script src='script.js'></script>
+    <script src='/static/javascript/script.js'></script>
 </header>
 
 <body class="content">
