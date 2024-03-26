@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($check !== false) {
                 $imageFileType = strtolower(pathinfo(basename($_FILES["UserImage"]["name"]), PATHINFO_EXTENSION));
-                $_POST['UserUploadPath'] = upload_object('s3273504userimages', $_POST["ID"] . '_UserImage.' . $imageFileType, $_FILES['UserImage']["tmp_name"]);
+                $_POST['UserUploadPath'] = upload_object('s3273504userimagev2', $_POST["ID"] . '_UserImage.' . $imageFileType, $_FILES['UserImage']["tmp_name"]);
             } else {
                 $Alerts['UserImage_Error'] = "File is not an image.";
 
@@ -163,7 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ];
             $DocID = get_random_docid($upload,'Message');
             if ($uploadimage) {
-                $_POST['MessageUploadPath'] = upload_object('s3273504messageimage', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
             }
             $upload = [
                 ['path' => 'image_path', 'value' => $_POST['MessageUploadPath']]
@@ -172,11 +172,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: /Forum');
         }
 
-    }
-
-    /*** Logout form ***/
-    if ($_POST['Logout'] == "Logout") {
-        kill_session();
     }
 
     /*** Login form ***/
@@ -209,7 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     data_update_document($upload, 'UserAccount', $_SESSION['user']['ID']);
                     $Alerts['OldPassword_error'] = "Change password Successfully";
                     $_SESSION['alerts'] = $Alerts;
-                    kill_session();
+                    header("Location: /Logout");
                 } else {
                     $Alerts['OldPassword_error'] = "The old password is incorrect";
                     $_SESSION['alerts'] = $Alerts;
@@ -262,7 +257,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             get_random_docid('Message');
             if ($uploadimage) {
-                $_POST['MessageUploadPath'] = upload_object('s3273504messageimage', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
             }
             $upload = [
                 'subject' => $_POST['Subject'],
@@ -320,7 +315,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         } else {
             if ($uploadimage) {
-                $_POST['MessageUploadPath'] = upload_object('s3273504messageimage', $_Post['MessageID'] . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $_Post['MessageID'] . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
             }
 
             $upload = [
@@ -345,24 +340,4 @@ function test_input($data)
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
     return $data;
-}
-
-function kill_session()
-{
-    $_SESSION = array();
-
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
-    }
-    session_destroy();
-    header('Location: /');
 }

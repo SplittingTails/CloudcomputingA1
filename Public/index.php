@@ -23,6 +23,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/useradmin':
         require '../public/useradmin.php';
         break;
+    case '/Logout':
+        require '../public/Helper/logout.php';
+        break;
     default:
         http_response_code(404);
         exit ('Not Found');

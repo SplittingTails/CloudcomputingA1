@@ -11,7 +11,7 @@ use Google\Cloud\Firestore\FirestoreClient;
 function init_FirestoreClient()
 {
 
-    $projectId = 's3273504-a1t1';
+    $projectId = 's3273504-a1t1v2';
     // Create the Cloud Firestore client
     $db = new FirestoreClient([
         'projectId' => $projectId,

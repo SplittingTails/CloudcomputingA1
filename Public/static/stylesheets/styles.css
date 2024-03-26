@@ -1,12 +1,102 @@
-table, th, td {
-    border: 1px solid black;
-  }
+* {
+  margin: 0;
+  padding: 0;
+}
 
-  .content {
-    max-width: 500px;
-    margin: auto;
-  }
+main,
+section,
+aside,
+footer {
+  margin: 0;
+  padding: 20px;
+}
 
-  .center {
-    margin: 0 auto;
-  }
+header {
+  padding-top: 20px;
+  text-align: center;
+}
+
+nav {
+  padding: 10px;
+  text-align: center;
+}
+
+nav li {
+  display: inline;
+}
+
+main {
+  background: #000000;
+}
+
+.header {
+  background: #03a9f4;
+}
+
+.hero {
+  background: #d22b1f;
+}
+
+.sidebar {
+  border: 1px solid #000000;
+  background: #673ab7;
+}
+
+.footer {
+  border: 1px solid #000000;
+  background: #616161;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  margin: 2px;
+}
+
+.content {
+  max-width: 500px;
+  margin: auto;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+/*** LOGIN ***/
+
+.login {
+  border: 1px solid #000000;
+  padding: 10px;
+}
+
+.postmessagearea {
+ 
+  border: 1px solid #000000;
+  margin-bottom: 10px;
+}
+
+button {
+  margin: 2px;
+}
+
+.formtable {
+  display: table;
+}
+.formrow {
+  display: table-row;
+}
+.formcell {
+  display: table-cell;
+}
+
+.navuserimage {
+  border-radius: 50%;
+  border: 1px solid #000000;
+  width: 50px;
+  height: 50px;
+}
+
+.navusersection {
+ padding-left: 100px;
+}

@@ -1,40 +1,39 @@
 <?php
-require_once ("../public/Helper/googlefirestore.php");
-if (!isset ($_SESSION)) {
-    session_start();
-} ?>
-
-<!DOCTYPE html>
-<html>
-<header>
-</header>
-
-<body class="content">
-    <?php if (isset ($_SESSION['user'])) { ?>
+require_once '../bootstrap/bootstrap.php';
+$pageTitle = 'Forum';
+top_module($pageTitle);
+nav_module($pageTitle);
+?>
+<?php if (isset ($_SESSION['user'])) { ?>
+    <div style="text-align: center;">
         <h1> Welcome to the Forum</h1>
-        <form action="Post-validation" method="post">
-            <button type="submit" value="Logout" id="Logout" name='Logout'>Logout</button>
-        </form>
         User Name:
         <a href="/useradmin">
             <?php echo $_SESSION['user']['ID'] ?>
         </a>
         <a href="/useradmin"><img style="width: 120px; height: 120px;" src="<?php echo $_SESSION['user']['image_path'] ?>"
                 alt="User_image"></a>
-        <div>
-            <form action="Post-validation" method="post" enctype="multipart/form-data">
-                <h1>Sign Up</h1>
+        <h1>Post a message</h1>
+        <div class="postmessagearea">
+            <form class="formtable center" action="Post-validation" method="post" enctype="multipart/form-data">
 
-                <label for="Subject">Subject:</label>
-                <input type="text" name="Subject" id="Subject"><br>
+                <span class="formrow">
+                    <label class="formcell" for="Subject">Subject:</label>
+                    <input class="formcell" type="text" name="Subject" id="Subject"><br>
+                </span>
                 <?php if (isset ($_SESSION['alerts']['Subject_error']))
                     echo '<p class="error">' . $_SESSION['alerts']['Subject_error'] . '</p>'; ?>
-                <label for="MessageText">Message:</label>
-                <textarea name="MessageText" id="MessageText" rows="4" cols="50"></textarea><br>
+                <span class="formrow">
+                    <label class="formcell" for="MessageText">Message:</label>
+                    <textarea class="formcell" name="MessageText" id="MessageText" rows="4" cols="20
+                    "></textarea><br>
+                </span>
                 <?php if (isset ($_SESSION['alerts']['MessageText_error']))
                     echo '<p class="error">' . $_SESSION['alerts']['MessageText_error'] . '</p>'; ?>
-                <label for="MessageImage">Message Image:</label>
-                <input type="file" name="MessageImage" id="MessageImage"><br>
+                <span class="formrow">
+                    <label class="formcell"   for="MessageImage">Message Image:</label>
+                    <input class="formcell"  type="file" name="MessageImage" id="MessageImage"><br>
+                </span>
                 <?php if (isset ($_SESSION['alerts']['UserImage_Error']))
                     echo '<p class="error">' . $_SESSION['alerts']['UserImage_Error'] . '</p>'; ?>
                 <input type="hidden" id="ID" name="ID" value="<?php echo $_SESSION['user']['ID'] ?>">
@@ -44,8 +43,8 @@ if (!isset ($_SESSION)) {
             </form>
         </div>
         <?php $count = 0;
-        $messageData = data_query('Message', 'timestamp', 'DESC', 10, '','');
-        $userData = data_query('UserAccount', '', '', 0, '','');
+        $messageData = data_query('Message', 'timestamp', 'DESC', 10, '', '');
+        $userData = data_query('UserAccount', '', '', 0, '', '');
         $array = get_object_vars($userData);
         foreach ($messageData as $message) {
             if ($message->exists()) {
@@ -67,10 +66,10 @@ if (!isset ($_SESSION)) {
                 echo 'No Messages';
             }
         } ?>
-
-    <?php } else {
-        header('Location: /');
-    } ?>
-</body>
-
-</html>
+    </div>
+<?php } else {
+    header('Location: /');
+} ?>
+<?php
+end_module()
+    ?>
