@@ -31,8 +31,8 @@ nav_module($pageTitle);
                 <?php if (isset ($_SESSION['alerts']['MessageText_error']))
                     echo '<p class="error">' . $_SESSION['alerts']['MessageText_error'] . '</p>'; ?>
                 <span class="formrow">
-                    <label class="formcell"   for="MessageImage">Message Image:</label>
-                    <input class="formcell"  type="file" name="MessageImage" id="MessageImage"><br>
+                    <label class="formcell" for="MessageImage">Message Image:</label>
+                    <input class="formcell" type="file" name="MessageImage" id="MessageImage"><br>
                 </span>
                 <?php if (isset ($_SESSION['alerts']['UserImage_Error']))
                     echo '<p class="error">' . $_SESSION['alerts']['UserImage_Error'] . '</p>'; ?>
@@ -42,30 +42,48 @@ nav_module($pageTitle);
                 <button type="submit" value="Message" id="Message" name='Message'>Submit Message</button>
             </form>
         </div>
-        <?php $count = 0;
-        $messageData = data_query('Message', 'timestamp', 'DESC', 10, '', '');
-        $userData = data_query('UserAccount', '', '', 0, '', '');
-        $array = get_object_vars($userData);
-        foreach ($messageData as $message) {
-            if ($message->exists()) {
-                echo '</br></br>Message ' . $count++ . '</br>' . PHP_EOL;
-                echo '' . $message['subject'] . '</br>' . PHP_EOL;
-                echo '' . $message['message_Text'] . '</br>' . PHP_EOL;
-                if ($message['image_path'] !== NULL) {
-                    echo '<img style="width: 120px; height: 120px;" src="' . $message['image_path'] . '" alt="Message_image">' . '</br>' . PHP_EOL;
-                }
-                echo '' . $message['timestamp'] . '</br>' . PHP_EOL;
-                foreach ($userData as $user) {
-                    if ($message['user_id'] === $user->id()) {
-                        echo '' . $user['user_name'] . '</br>' . PHP_EOL;
-                        echo '<img style="width: 120px; height: 120px;"
-                        src="' . $user['image_path'] . '" alt="User_image">' . PHP_EOL;
+        <h1>messages</h1>
+        <div class="messagearea">
+            <?php $count = 0;
+            $messageData = data_query('Message', 'timestamp', 'DESC', 10, '', '');
+            $userData = data_query('UserAccount', '', '', 0, '', '');
+            if ($messageData->rows() > 0) {
+                foreach ($messageData as $message) {
+                    if ($message->exists()) {
+                        echo '<table>' . PHP_EOL;
+                        echo '<tr>' . PHP_EOL;
+                        echo '<td>Message Info:</td>' . PHP_EOL;
+                        echo '<td>' . date('j F Y H:i', strtotime($message['timestamp'])) . '' . PHP_EOL;
+                        foreach ($userData as $user) {
+                            if ($message['user_id'] === $user->id()) {
+                                echo '' . $user['user_name'] . '<img class="messageuserimg" src="' . $user['image_path'] . '" alt="User_image"></td>' . PHP_EOL;
+                            }
+                        }
+
+                        echo '</tr>' . PHP_EOL;
+                        echo '<tr>' . PHP_EOL;
+                        echo '<td>Subject:</td>' . PHP_EOL;
+                        echo '<td>' . $message['subject'] . '</td>' . PHP_EOL;
+                        echo '</tr>' . PHP_EOL;
+                        echo '<tr>' . PHP_EOL;
+                        echo '<td>Message:</td>' . PHP_EOL;
+                        echo '<td>' . $message['message_Text'] . '</td>' . PHP_EOL;
+                        echo '</tr>' . PHP_EOL;
+                        echo '<tr>' . PHP_EOL;
+                        if ($message['image_path'] !== NULL) {
+                            echo '<td>Image</td>' . PHP_EOL;
+                            echo '<td><img class="messageareaimg" src="' . $message['image_path'] . '" alt="Message_image"></td>' . PHP_EOL;
+                            echo '</tr>' . PHP_EOL;
+                        }
+
+                        echo '</table>' . PHP_EOL;
                     }
                 }
             } else {
                 echo 'No Messages';
             }
-        } ?>
+            ?>
+        </div>
     </div>
 <?php } else {
     header('Location: /');

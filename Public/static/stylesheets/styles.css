@@ -25,33 +25,17 @@ nav li {
   display: inline;
 }
 
-main {
-  background: #000000;
-}
-
-.header {
-  background: #03a9f4;
-}
-
-.hero {
-  background: #d22b1f;
-}
-
-.sidebar {
-  border: 1px solid #000000;
-  background: #673ab7;
-}
-
-.footer {
-  border: 1px solid #000000;
-  background: #616161;
-}
-
 table,
 th,
 td {
   border: 1px solid black;
   margin: 2px;
+  max-width: 370;
+  max-height: 370;
+}
+
+td {
+  padding-left: 10px;
 }
 
 .content {
@@ -70,10 +54,28 @@ td {
   padding: 10px;
 }
 
+/*** Forum ***/
+
 .postmessagearea {
  
   border: 1px solid #000000;
   margin-bottom: 10px;
+}
+
+.messagearea {
+ 
+  border: 1px solid #000000;
+  margin-bottom: 10px;
+}
+
+.messageareaimg {
+  max-width: 370px;
+  max-height: 370px;
+}
+
+/* Admin */
+.changepassword{
+  padding-bottom: 10px;
 }
 
 button {
@@ -99,4 +101,10 @@ button {
 
 .navusersection {
  padding-left: 100px;
+}
+
+.messageuserimg {
+  width: 20px; 
+  height: 20px;
+  padding-left: 10px;
 }
