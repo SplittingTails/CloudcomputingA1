@@ -108,3 +108,7 @@ button {
   height: 20px;
   padding-left: 10px;
 }
+
+.error{
+  color: red;
+}
