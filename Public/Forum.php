@@ -89,5 +89,5 @@ nav_module($pageTitle);
     header('Location: /');
 } ?>
 <?php
-end_module()
+end_module($pageTitle)
     ?>

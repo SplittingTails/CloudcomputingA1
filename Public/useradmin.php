@@ -1,19 +1,9 @@
 <?php
 require_once '../bootstrap/bootstrap.php';
-require_once ("../public/Helper/googlefirestore.php");
 $pageTitle = 'User admin';
 top_module($pageTitle);
-nav_module($pageTitle)
-    ?>
-
-<!DOCTYPE html>
-<html>
-<header>
-
-</header>
-
-<body class="content">
-    <?php if (isset ($_SESSION['user'])) { ?>
+nav_module($pageTitle);
+   if (isset ($_SESSION['user'])) { ?>
         <div class="changepassword">
         <h1>Edit Password</h1>
             <form class="formrow" action="Post-validation" method="post">
@@ -33,8 +23,7 @@ nav_module($pageTitle)
             </form>
         </div>
         <?php $count = 0;
-        $messageData = data_query('Message', 'timestamp', 'DESC', 10, '', 'user_id,==,' . $_SESSION['user']['ID']);
-        if ($messageData->rows() > 0) {
+        $messageData = data_query('Message', '', '',0, '', 'user_id,==,' . $_SESSION['user']['ID']);
             echo '<h1>Edit Posted messages</h1>' . PHP_EOL;
             foreach ($messageData as $message) {
                 if ($message->exists()) {
@@ -94,13 +83,9 @@ nav_module($pageTitle)
                     $count++;
                 }
             }
-        } else {
-            echo 'No messages <br><br>'; ?>
-        <?php }
+       
     } else {
         header('Location: /');
-    } ?>
-</body>
-<?php
-end_module()
+    } 
+end_module($pageTitle)
     ?>

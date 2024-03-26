@@ -25,6 +25,10 @@ nav li {
   display: inline;
 }
 
+table {
+  width: 370px;
+}
+
 table,
 th,
 td {

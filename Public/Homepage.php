@@ -32,5 +32,5 @@ nav_module($pageTitle)
 </div>
 
 <?php
-end_module()
+end_module($pageTitle)
   ?>

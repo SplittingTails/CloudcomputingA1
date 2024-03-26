@@ -34,5 +34,5 @@ nav_module($pageTitle)
     <button class="formcell" type="submit" value="Register" id="Register" name='Register'>Register</button>
 </form>
 <?php
-end_module()
+end_module($pageTitle)
     ?>

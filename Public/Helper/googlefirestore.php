@@ -26,7 +26,7 @@ function data_query(string $collection, string $orderby, string $orderbySort, in
     # [START firestore_data_query]
     $Query = $db->collection($collection);
     if ($orderby !== '' and $orderbySort !== '') {
-        $UserAccounts = $Query->orderBy($orderby, $orderbySort);
+        $Query = $Query->orderBy($orderby, $orderbySort);
     }
     if ($limit !== 0) {
         $Query = $Query->limit($limit);

@@ -16,8 +16,6 @@ function upload_object(string $bucketName, string $objectName, string $source): 
         'name' => $objectName
     ]);
 
-    printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
-
     return $storageURL .'/'. $bucketName .'/' . $objectName;
 
 }

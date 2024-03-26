@@ -1,7 +1,8 @@
 <?php
 /**** FOOTER OF WEBSITE ****/
-function end_module()
+function end_module($pageTitle)
 {
+    if (isset ($_SESSION['user']) || $pageTitle === 'Homepage' || $pageTitle === 'Register') { 
     $FileDate = date("Y F d  H:i", filemtime($_SERVER['SCRIPT_FILENAME']));
     $html = <<<"OUTPUT"
     <footer>
@@ -17,4 +18,5 @@ function end_module()
    </html>
   OUTPUT;
     echo $html;
+    }
 }

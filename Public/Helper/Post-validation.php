@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     /*** Login form ***/
     if ($_POST['Login'] == "Login") {
-        $documents = data_query('UserAccount', '', '', 0, '', '');
+        $documents = data_query('UserAccount', '', '', 0, $_POST["ID"], '');
         if (empty ($_POST['ID'])) {
             $Alerts['Username_error'] = "ID is required";
         } else {
@@ -93,29 +93,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $_POST['Password'] = test_input($_POST["Password"]);
         }
-        if ($documents->isEmpty()) {
-            $Alerts['Login_Error'] = "ID or password is invalid";
+        if (!$documents->snapshot()->exists()) {
+           $Alerts['Login_Error'] = "ID or password is invalid";
         }
         if (count($Alerts) > 0) {
             $_SESSION['alerts'] = $Alerts;
             header('Location: /');
             exit();
         } else {
-            foreach ($documents as $document) {
-                if ($document->exists()) {
-                    if ($_POST["ID"] === $document->id() && password_verify($_POST["Password"], $document['password'])) {
-                        $_SESSION['user']['ID'] = $document->id();
-                        $_SESSION['user']['image_path'] = $document['image_path'];
-                        header("Location: /Forum");
-                    } else {
-                        $Alerts['Login_Error'] = "ID or password is invalid";
-                        $_SESSION['alerts'] = $Alerts;
-                        header("Location: /");
-                    }
-                }
+            if ($_POST["ID"] === $documents->snapshot()->id() && password_verify($_POST["Password"], $documents->snapshot()->data()['password'])) {
+                $_SESSION['user']['ID'] = $documents->snapshot()->id();
+                $_SESSION['user']['image_path'] = $documents->snapshot()->data()['image_path'];
+                header("Location: /Forum");
+            } else {
+                $Alerts['Login_Error'] = "ID or password is invalid";
+                $_SESSION['alerts'] = $Alerts;
+                #header("Location: /");
             }
-            exit();
         }
+        exit();
     }
 
     /*** Message form ***/
@@ -153,15 +149,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: /Forum');
             exit();
         } else {
+
             $upload = [
                 'subject' => $_POST['Subject'],
                 'message_Text' => $_POST['MessageText'],
-                'image_path' => $_POST['MessageUploadPath'],
                 'timestamp' => FieldValue::serverTimestamp(),
                 'user_id' => $_POST['ID']
 
             ];
-            $DocID = get_random_docid($upload,'Message');
+
+
+            $DocID = get_random_docid($upload, 'Message');
             if ($uploadimage) {
                 $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
             }
@@ -193,7 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: /');
             exit();
         } else {
-            $documents = data_query('UserAccount', '', '', 0, $_SESSION['user']['ID'],'');
+            $documents = data_query('UserAccount', '', '', 0, $_SESSION['user']['ID'], '');
             $snapshot = $documents->snapshot();
             if ($snapshot->exists()) {
                 if ($_SESSION['user']['ID'] === $snapshot->id() && password_verify($_POST["OldPassword"], $snapshot->data()['password'])) {
@@ -220,58 +218,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-
-    if ($_POST['Message'] == "Message") {
-        $uploadimage = false;
-        if (empty ($_POST['Subject'])) {
-            $Alerts['Subject_error'] = "Subject is required";
-        } else {
-            $_POST['Subject'] = test_input($_POST["Subject"]);
-        }
-        if (empty ($_POST['MessageText'])) {
-            $Alerts['MessageText_error'] = "Message Text is required";
-        } else {
-            $_POST['MessageText'] = test_input($_POST["MessageText"]);
-        }
-        if (empty ($_POST['ID'])) {
-            $Alerts['ID_error'] = "ID is required";
-        } else {
-            $_POST['ID'] = test_input($_POST["ID"]);
-        }
-        if ($_FILES['MessageImage']['error'] === 0) {
-            $check = getimagesize($_FILES['MessageImage']["tmp_name"]);
-            if ($check !== false) {
-
-                $imageFileType = strtolower(pathinfo(basename($_FILES["MessageImage"]["name"]), PATHINFO_EXTENSION));
-                $uploadimage = true;
-
-            } else {
-                $Alerts['UserImage_Error'] = "File is not an image.";
-                $uploadimage = false;
-            }
-        }
-        if (count($Alerts) > 0) {
-            $_SESSION['alerts'] = $Alerts;
-            header('Location: /Forum');
-            exit();
-        } else {
-            get_random_docid('Message');
-            if ($uploadimage) {
-                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $DocID . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
-            }
-            $upload = [
-                'subject' => $_POST['Subject'],
-                'message_Text' => $_POST['MessageText'],
-                'image_path' => $_POST['MessageUploadPath'],
-                'timestamp' => FieldValue::serverTimestamp(),
-                'user_id' => $_POST['ID']
-
-            ];
-
-            Set_DocID_Data($upload, 'Message', $DocID);
-            header('Location: /Forum');
-        }
-    }
     /*** UpdateMessage form ***/
 
     if ($_POST['UpdateMessage'] == "UpdateMessage") {
@@ -294,8 +240,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         if (empty ($_POST['MessageID'])) {
             $Alerts['MessageID_error'] = "MessageID is required";
-        } else {
-            $_POST['MessageID'] = test_input($_POST["MessageID"]);
         }
         if ($_FILES['MessageImage']['error'] === 0) {
             $check = getimagesize($_FILES['MessageImage']["tmp_name"]);
@@ -314,19 +258,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: /useradmin');
             exit();
         } else {
+
             if ($uploadimage) {
-                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $_Post['MessageID'] . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+                $_POST['MessageUploadPath'] = upload_object('s3273504messageimagev2', $_POST['MessageID'] . '_MessageImage.' . $imageFileType, $_FILES['MessageImage']["tmp_name"]);
+
             }
 
-            $upload = [
-                'subject' => $_POST['Subject'],
-                'message_Text' => $_POST['MessageText'],
-                'image_path' => $_POST['MessageUploadPath'],
-                'timestamp' => FieldValue::serverTimestamp(),
-                'user_id' => $_POST['UserID']
-
-            ];
-            Set_DocID_Data($upload, 'Message', $_POST['MessageID']);
+            if (!isset ($_POST['MessageUploadPath'])) {
+                $upload = [
+                    ['path' => 'subject', 'value' => $_POST['Subject']],
+                    ['path' => 'message_Text', 'value' => $_POST['MessageText']],
+                    ['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()],
+                    ['path' => 'user_id', 'value' => $_POST['UserID']]
+                ];
+            } else {
+                $upload = [
+                    ['path' => 'subject', 'value' => $_POST['Subject']],
+                    ['path' => 'message_Text', 'value' => $_POST['MessageText']],
+                    ['path' => 'image_path', 'value' => $_POST['MessageUploadPath']],
+                    ['path' => 'timestamp', 'value' => FieldValue::serverTimestamp()],
+                    ['path' => 'user_id', 'value' => $_POST['UserID']]
+                ];
+            }
+            data_update_document($upload, 'Message', $_POST['MessageID']);
             header('Location: /Forum');
         }
 
